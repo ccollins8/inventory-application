@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory App</title>
+</head>
+<body>
+    <header><a href="/">Home</a></header>
+    <h1><%= games[0].genre %> games</h1>
+    <ul>
+        <% games.forEach((game) => { %>
+            <li>
+                <p>Title: <%= game.game %></p>
+                <p>Developer: <%= game.developer %></p>
+                <p>Release Date: <%= game.release_date %></p>
+            </li>
+            
+      <%  }); %>
+    </ul>
+</body>
+</html>
