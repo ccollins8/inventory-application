@@ -42,10 +42,61 @@ async function getGamesFromDeveloper(developer) {
   return rows
 }
 
+async function insertGame(data) {
+
+  console.log(data)
+
+  // Add row to game table and get id of new row with RETURNING
+  const {rows} = await pool.query("INSERT INTO games (game, release_date) VALUES ($1, $2) RETURNING *", 
+      [data.gameName, data.releaseDate]);
+  const gameId = rows[0].id;
+
+  // insert into genres table and get ids
+  const genreIds = []
+  for (const genre of data.genres) {
+    let id;
+    const {rows} =  await pool.query(`SELECT * FROM genres WHERE genre ILIKE $1`, [genre])
+    if (rows.length > 0) {
+      id = rows[0].id
+    } else {
+      const {rows} = await pool.query("INSERT INTO genres (genre) VALUES ($1) RETURNING *", [genre]);
+      id = rows[0].id
+    }
+    genreIds.push(id)
+  }
+  
+
+  // insert into developers table and get ids
+  const developerIds = []
+  for (const developer of data.developers) {
+    let id;
+    const { rows } = await pool.query(`SELECT * FROM developers WHERE developer ILIKE $1`, [developer]);
+    if (rows.length > 0) {
+      id = rows[0].id
+    } else {
+      const {rows} = await pool.query("INSERT INTO developers (developer) VALUES ($1) RETURNING *", [developer]);
+      id = rows[0].id
+    }
+    developerIds.push(id)
+  }
+  console.log(developerIds)
+  
+  // insert into games_genres and games_developers
+  for (const genreId of genreIds) {
+    await pool.query(`INSERT INTO games_genres (game_id, genre_id) VALUES ($1, $2)`, [gameId,genreId])
+  }
+  for (const developerId of developerIds) {
+    await pool.query(`INSERT INTO games_developers (game_id, developer_id) VALUES ($1, $2)`, [gameId,developerId])
+  }
+
+}
+
+
 module.exports = {
   insertMessage,
   getGenres,
   getGamesInGenre,
   getDevelopers,
-  getGamesFromDeveloper
+  getGamesFromDeveloper,
+  insertGame
 };
