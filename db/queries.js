@@ -91,6 +91,14 @@ async function insertGame(data) {
 
 }
 
+async function insertGenre(genre) {
+  await pool.query(`INSERT INTO genres (genre) VALUES ($1)`, [genre])
+}
+
+async function insertDeveloper(developer) {
+  await pool.query(`INSERT INTO developers (developer) VALUES ($1)`, [developer])
+}
+
 
 module.exports = {
   insertMessage,
@@ -98,5 +106,6 @@ module.exports = {
   getGamesInGenre,
   getDevelopers,
   getGamesFromDeveloper,
-  insertGame
+  insertGame,
+  insertGenre, insertDeveloper
 };

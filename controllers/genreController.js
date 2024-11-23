@@ -11,7 +11,14 @@ async function getGenre(req, res) {
     res.render('genre', {games})
 }
 
+async function createGenrePost(req, res) {
+    const genre = req.body.genre
+    await db.insertGenre(genre)
+    res.redirect('/genres')
+}
+
 module.exports = {
     getGenres,
-    getGenre
+    getGenre,
+    createGenrePost
 }

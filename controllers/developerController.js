@@ -12,7 +12,15 @@ async function getDeveloper(req, res) {
     res.render('developer', {games})
 }
 
+async function createDeveloperPost(req,res) {
+    const developer = req.body.developer
+    console.log(developer)
+    await db.insertDeveloper(developer)
+    res.redirect('/developers')
+}
+
 module.exports = {
     getDevelopers,
-    getDeveloper
+    getDeveloper,
+    createDeveloperPost
 }

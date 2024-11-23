@@ -5,5 +5,7 @@ const genreRouter = Router()
 genreRouter.get('/', genreController.getGenres)
 genreRouter.get('/:genre', genreController.getGenre)
 
+genreRouter.post('/create-genre', genreController.createGenrePost)
+
 module.exports = genreRouter
 

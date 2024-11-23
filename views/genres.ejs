@@ -16,5 +16,12 @@
             
       <%  }); %>
     </ul>
+    <h1>Add Genre</h1>
+    <form action="/genres/create-genre" method="POST">
+        <label for="genre">Genre:</label>
+        <input placeholder="Genre" type="text" name="genre" id="genre">
+    
+        <button type="submit">Submit</button>
+    </form>
 </body>
 </html>
