@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory App</title>
+</head>
+<body>
+    <header><a href="/">Home</a></header>
+    <% const genres = []
+       const developers = []
+       game.forEach(game => {
+        if (!genres.includes(game.genre)) {
+            genres.push(game.genre)
+        }
+        if (!developers.includes(game.developer)) {
+            developers.push(game.developer)
+        }
+       })
+       console.log(genres)
+    %>
+        <li>
+            <p>Title: <%= game[0].game %></p>
+            <p>Genres: <%= genres.join(", ") %></p>
+            <p>Developers: <%= developers.join(", ") %></p>
+            <p>Release Date: <%= game[0].release_date %></p>
+        </li>
+</body>
+</html>

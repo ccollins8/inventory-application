@@ -6,6 +6,6 @@ genreRouter.get('/', genreController.getGenres)
 genreRouter.get('/:genre', genreController.getGenre)
 
 genreRouter.post('/create-genre', genreController.createGenrePost)
-
+genreRouter.post('/genre/update-genre',genreController.updateGenrePost)
 module.exports = genreRouter
 

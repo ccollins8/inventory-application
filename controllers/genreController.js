@@ -7,7 +7,6 @@ async function getGenres(req, res) {
 
 async function getGenre(req, res) {
     const games = await db.getGamesInGenre(req.params.genre);
-    console.log(games)
     res.render('genre', {games})
 }
 
@@ -17,8 +16,17 @@ async function createGenrePost(req, res) {
     res.redirect('/genres')
 }
 
+async function updateGenrePost(req, res) {
+    const genreId = req.body.genreId;
+    const newGenre = req.body.newGenre;
+
+    await db.updateGenre(genreId, newGenre);
+    res.redirect('/genres')
+}
+
 module.exports = {
     getGenres,
     getGenre,
-    createGenrePost
+    createGenrePost,
+    updateGenrePost
 }

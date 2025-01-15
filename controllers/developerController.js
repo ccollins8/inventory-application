@@ -19,8 +19,18 @@ async function createDeveloperPost(req,res) {
     res.redirect('/developers')
 }
 
+async function updateDeveloperPost(req, res) {
+    const developerId = req.body.developerId;
+    const newDeveloper = req.body.newDeveloper;
+    console.log(req.body)
+
+    await db.updateDeveloper(developerId, newDeveloper);
+    res.redirect('/developers')
+}
+
 module.exports = {
     getDevelopers,
     getDeveloper,
-    createDeveloperPost
+    createDeveloperPost,
+    updateDeveloperPost
 }

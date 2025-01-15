@@ -7,7 +7,14 @@
 </head>
 <body>
     <header><a href="/">Home</a></header>
-    <h1><%= games[0].developer %> games</h1>
+    <h1><%= games[0].developer %></h1>
+    <% console.log(games[0]) %>
+    <form action="/developers/developer/update-developer" method="POST">
+        <label for="genre">Update Developer Name:</label>
+        <input placeholder="Developer" type="text" name="newDeveloper" id="newDeveloper">
+        <input type="hidden" name="developerId" value="<%= games[0].developer_id %>">
+        <button type="submit">Submit</button>
+    </form>
     <ul>
         <% games.forEach((game) => { %>
             <li>

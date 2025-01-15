@@ -6,6 +6,23 @@ async function insertMessage(data) {
     console.log('message inserted!')
 }
 
+async function getGames() {
+  const {rows} = await pool.query('SELECT game FROM games')
+  return rows
+}
+
+async function getGame(game) {
+  const {rows} =  await pool.query(`
+    SELECT game, release_date, developer, genre
+    FROM games JOIN games_genres ON games.id = games_genres.game_id
+    JOIN genres ON genres.id = games_genres.genre_id
+    JOIN games_developers ON games.id = games_developers.game_id
+    JOIN developers ON developers.id = games_developers.developer_id
+    WHERE game = ($1)
+      `,[game])
+    return rows
+}
+
 async function getGenres() {
     const {rows} =  await pool.query("SELECT genre FROM genres")
     return rows
@@ -14,7 +31,7 @@ async function getGenres() {
 async function getGamesInGenre(genre) {
   
   const {rows} =  await pool.query(`
-  SELECT game, release_date, developer, genre
+  SELECT game, release_date, developer, genre, genre_id
   FROM games JOIN games_genres ON games.id = games_genres.game_id
   JOIN genres ON genres.id = games_genres.genre_id
   JOIN games_developers ON games.id = games_developers.game_id
@@ -32,7 +49,7 @@ async function getDevelopers() {
 async function getGamesFromDeveloper(developer) {
   
   const {rows} =  await pool.query(`
-  SELECT game, release_date, developer, genre
+  SELECT game, release_date, developer, genre, developer_id
   FROM games JOIN games_genres ON games.id = games_genres.game_id
   JOIN genres ON genres.id = games_genres.genre_id
   JOIN games_developers ON games.id = games_developers.game_id
@@ -99,13 +116,32 @@ async function insertDeveloper(developer) {
   await pool.query(`INSERT INTO developers (developer) VALUES ($1)`, [developer])
 }
 
+async function updateGenre(genreId,newGenre) {
+  await pool.query(`UPDATE genres SET genre = $1 WHERE id = $2`, [newGenre, genreId])
+}
+
+async function updateDeveloper(developerId,newDeveloper) {
+  await pool.query(`UPDATE developers SET developer = $1 WHERE id = $2`, [newDeveloper, developerId])
+}
+
+//Add updateGame function
+
+async function updateGame() {
+
+}
+
 
 module.exports = {
   insertMessage,
+  getGames,
+  getGame,
   getGenres,
   getGamesInGenre,
   getDevelopers,
   getGamesFromDeveloper,
   insertGame,
-  insertGenre, insertDeveloper
+  insertGenre, 
+  insertDeveloper,
+  updateGenre,
+  updateDeveloper
 };
