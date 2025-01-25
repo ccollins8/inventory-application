@@ -24,7 +24,7 @@ async function updateDeveloperPost(req, res) {
     const newDeveloper = req.body.newDeveloper;
     console.log(req.body)
 
-    await db.updateDeveloper(developerId, newDeveloper);
+    // await db.updateDeveloper(developerId, newDeveloper);
     res.redirect('/developers')
 }
 

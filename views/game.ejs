@@ -6,7 +6,6 @@
     <title>Inventory App</title>
 </head>
 <body>
-    <header><a href="/">Home</a></header>
     <% const genres = []
        const developers = []
        game.forEach(game => {
@@ -19,6 +18,26 @@
        })
        console.log(genres)
     %>
+    <header><a href="/">Home</a></header>
+    <h2>Update Game</h2>
+    <form action="/games/game/update-game" method="POST">
+        <label for="name">Game name:</label>
+        <input placeholder="Game name" type="text" name="gameName" id="gameName" value="<%= game[0].game %>">
+    
+        <label for="genres">Genres (comma-separated):</label>
+        <input placeholder="Genres" type="text" name="genres" id="genre" value="<%= genres.join(", ") %>">
+    
+        <label for="developers">Developers (comma-separated)</label>
+        <input placeholder="Developers" type="text" name="developers" id="developer" value="<%= developers.join(", ") %>">
+    
+        <label for="releaseDate">Release Date:</label>
+        <input type="date" name="releaseDate" id="releaseDate" value="<%= game[0].release_date %>">
+
+        <input type="hidden" name="gameId" value="<%= game[0].id %>">
+    
+        <button type="submit">Submit</button>
+    </form>
+
         <li>
             <p>Title: <%= game[0].game %></p>
             <p>Genres: <%= genres.join(", ") %></p>

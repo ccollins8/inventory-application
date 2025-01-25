@@ -13,7 +13,7 @@ async function getGames() {
 
 async function getGame(game) {
   const {rows} =  await pool.query(`
-    SELECT game, release_date, developer, genre
+    SELECT game, release_date, developer, genre, games.id
     FROM games JOIN games_genres ON games.id = games_genres.game_id
     JOIN genres ON genres.id = games_genres.genre_id
     JOIN games_developers ON games.id = games_developers.game_id
@@ -126,7 +126,46 @@ async function updateDeveloper(developerId,newDeveloper) {
 
 //Add updateGame function
 
-async function updateGame() {
+async function updateGame(data) {
+  // await pool.query('UPDATE games SET game = $1, release_date = $2 WHERE id = $3', [data.gameName, data.releaseDate, data.gameId])
+  // await pool.query('DELETE FROM games_genres WHERE game_id = $!', [data.gameId])
+  
+  const genreIds = []
+  for (const genre of data.genres) {
+    let id;
+    const {rows} =  await pool.query(`SELECT * FROM genres WHERE genre ILIKE $1`, [genre])
+    if (rows.length > 0) {
+      id = rows[0].id
+    } else {
+      const {rows} = await pool.query("INSERT INTO genres (genre) VALUES ($1) RETURNING *", [genre]);
+      id = rows[0].id
+    }
+    genreIds.push(id)
+  }
+
+  const developerIds = []
+  for (const developer of data.developers) {
+    let id;
+    const { rows } = await pool.query(`SELECT * FROM developers WHERE developer ILIKE $1`, [developer]);
+    if (rows.length > 0) {
+      id = rows[0].id
+    } else {
+      const {rows} = await pool.query("INSERT INTO developers (developer) VALUES ($1) RETURNING *", [developer]);
+      id = rows[0].id
+    }
+    developerIds.push(id)
+  }
+
+  // delete and replace current junction table game rows
+  await pool.query('DELETE FROM games_genres WHERE game_id = $1', [data.gameId])
+  await pool.query('DELETE FROM games_developers WHERE game_id = $1', [data.gameId])
+
+  for (const genreId of genreIds) {
+    await pool.query('INSERT INTO games_genres (game_id, genre_id) VALUES ($1, $2)', [data.gameId, genreId])
+  }
+  for (const developerId of developerIds) {
+    await pool.query(`INSERT INTO games_developers (game_id, developer_id) VALUES ($1, $2)`, [data.gameId,developerId])
+  }
 
 }
 
@@ -143,5 +182,6 @@ module.exports = {
   insertGenre, 
   insertDeveloper,
   updateGenre,
-  updateDeveloper
+  updateDeveloper,
+  updateGame
 };
