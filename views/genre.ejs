@@ -7,23 +7,31 @@
 </head>
 <body>
     <header><a href="/">Home</a></header>
-    <h1><%= games[0].genre %> games</h1>
+    
+    <h1><%= genreName %> games</h1>
+    <% console.log(games[0]) %>
+    <form action="/genres/genre/delete" method="post">
+        <input type="hidden" name="genreId" value="<%= genreId %>">
+        <button type="submit">Delete Genre</button>
+    </form>
     <% console.log(games[0]) %>
     <form action="/genres/genre/update-genre" method="POST">
         <label for="genre">Update Genre Name:</label>
         <input placeholder="Genre" type="text" name="newGenre" id="newGenre">
-        <input type="hidden" name="genreId" value="<%= games[0].genre_id %>">
+        <input type="hidden" name="genreId" value="<%= genreId %>">
         <button type="submit">Submit</button>
     </form>
-    <ul>
-        <% games.forEach((game) => { %>
-            <li>
-                <p>Title: <%= game.game %></p>
-                <p>Developer: <%= game.developer %></p>
-                <p>Release Date: <%= game.release_date %></p>
-            </li>
-            
-      <%  }); %>
-    </ul>
+    <% if (games.length > 0) { %>
+        <ul>
+            <% games.forEach((game) => { %>
+                <li>
+                    <p>Title: <%= game.game %></p>
+                    <p>Developer: <%= game.developer %></p>
+                    <p>Release Date: <%= game.release_date %></p>
+                </li>
+                
+          <%  }); %>
+        </ul>
+    <%}%>
 </body>
 </html>

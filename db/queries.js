@@ -6,6 +6,18 @@ async function insertMessage(data) {
     console.log('message inserted!')
 }
 
+// Helping functions
+   async function getGenreId(genreName) {
+     const {rows} = await pool.query('SELECT id FROM genres WHERE genre = $1', [genreName])
+     return rows
+   }
+
+   async function getDeveloperId(developerName) {
+    const {rows} = await pool.query('SELECT id FROM developers WHERE developer = $1', [developerName])
+    return rows
+  }
+// Main functions
+
 async function getGames() {
   const {rows} = await pool.query('SELECT game FROM games')
   return rows
@@ -14,10 +26,11 @@ async function getGames() {
 async function getGame(game) {
   const {rows} =  await pool.query(`
     SELECT game, release_date, developer, genre, games.id
-    FROM games JOIN games_genres ON games.id = games_genres.game_id
-    JOIN genres ON genres.id = games_genres.genre_id
-    JOIN games_developers ON games.id = games_developers.game_id
-    JOIN developers ON developers.id = games_developers.developer_id
+    FROM games 
+    LEFT JOIN games_genres ON games.id = games_genres.game_id
+    LEFT JOIN genres ON genres.id = games_genres.genre_id
+    LEFT JOIN games_developers ON games.id = games_developers.game_id
+    LEFT JOIN developers ON developers.id = games_developers.developer_id
     WHERE game = ($1)
       `,[game])
     return rows
@@ -32,7 +45,8 @@ async function getGamesInGenre(genre) {
   
   const {rows} =  await pool.query(`
   SELECT game, release_date, developer, genre, genre_id
-  FROM games JOIN games_genres ON games.id = games_genres.game_id
+  FROM games 
+  JOIN games_genres ON games.id = games_genres.game_id
   JOIN genres ON genres.id = games_genres.genre_id
   JOIN games_developers ON games.id = games_developers.game_id
   JOIN developers ON developers.id = games_developers.developer_id
@@ -169,9 +183,25 @@ async function updateGame(data) {
 
 }
 
+async function deleteGame(data) {
+  // await pool.query('DELETE FROM table_name WHERE condition;')
+}
+
+async function deleteGenre(genreId) {
+  await pool.query('DELETE FROM games_genres WHERE genre_id = $1', [genreId])
+  await pool.query('DELETE FROM genres WHERE id = $1', [genreId])
+}
+
+async function deleteDeveloper(developerId) {
+  await pool.query('DELETE FROM games_developers WHERE developer_id = $1', [developerId])
+  await pool.query('DELETE FROM developers WHERE id = $1', [developerId])
+}
+
 
 module.exports = {
   insertMessage,
+  getGenreId,
+  getDeveloperId,
   getGames,
   getGame,
   getGenres,
@@ -183,5 +213,7 @@ module.exports = {
   insertDeveloper,
   updateGenre,
   updateDeveloper,
-  updateGame
+  updateGame,
+  deleteGenre,
+  deleteDeveloper
 };

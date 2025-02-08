@@ -7,9 +7,11 @@ async function getDevelopers(req, res) {
 }
 
 async function getDeveloper(req, res) {
-    const games = await db.getGamesFromDeveloper(req.params.developer);
+    const developerName = req.params.developer
+    const developerId = (await db.getDeveloperId(developerName))[0].id
+    const games = await db.getGamesFromDeveloper(developerName);
     console.log(games)
-    res.render('developer', {games})
+    res.render('developer', {games,developerName,developerId})
 }
 
 async function createDeveloperPost(req,res) {
@@ -28,9 +30,15 @@ async function updateDeveloperPost(req, res) {
     res.redirect('/developers')
 }
 
+async function deleteDeveloper(req, res) {
+    await db.deleteDeveloper(req.body.developerId)
+    res.redirect('/developers')
+}
+
 module.exports = {
     getDevelopers,
     getDeveloper,
     createDeveloperPost,
-    updateDeveloperPost
+    updateDeveloperPost,
+    deleteDeveloper
 }

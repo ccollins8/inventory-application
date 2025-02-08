@@ -6,8 +6,9 @@ async function getGames(req, res) {
 }
 
 async function getGame(req, res) {
+    console.log(req.params.game)
     const game = await db.getGame(req.params.game)
-    // console.log(game)
+    console.log(game)
     res.render('game', {game})
 }
 

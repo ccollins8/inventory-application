@@ -6,8 +6,11 @@ async function getGenres(req, res) {
 }
 
 async function getGenre(req, res) {
+    const genreName = req.params.genre
+    const genreId = (await db.getGenreId(genreName))[0].id
     const games = await db.getGamesInGenre(req.params.genre);
-    res.render('genre', {games})
+    // console.log(genreId)
+    res.render('genre', {games,genreName, genreId})
 }
 
 async function createGenrePost(req, res) {
@@ -17,6 +20,7 @@ async function createGenrePost(req, res) {
 }
 
 async function updateGenrePost(req, res) {
+    console.log(req.body)
     const genreId = req.body.genreId;
     const newGenre = req.body.newGenre;
 
@@ -24,9 +28,16 @@ async function updateGenrePost(req, res) {
     res.redirect('/genres')
 }
 
+async function deleteGenre(req, res) {
+    //could do with parameters i believe or like how i did update
+    await db.deleteGenre(req.body.genreId)
+    res.redirect('/genres')
+}
+
 module.exports = {
     getGenres,
     getGenre,
     createGenrePost,
-    updateGenrePost
+    updateGenrePost,
+    deleteGenre
 }
