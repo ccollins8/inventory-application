@@ -183,8 +183,10 @@ async function updateGame(data) {
 
 }
 
-async function deleteGame(data) {
-  // await pool.query('DELETE FROM table_name WHERE condition;')
+async function deleteGame(gameId) {
+  await pool.query('DELETE FROM games_genres WHERE game_id = $1', [gameId])
+  await pool.query('DELETE FROM games_developers WHERE game_id = $1', [gameId])
+  await pool.query('DELETE FROM games WHERE id = $1', [gameId])
 }
 
 async function deleteGenre(genreId) {
@@ -215,5 +217,6 @@ module.exports = {
   updateDeveloper,
   updateGame,
   deleteGenre,
-  deleteDeveloper
+  deleteDeveloper,
+  deleteGame
 };

@@ -7,5 +7,7 @@ gameRouter.get('/:game', gameController.getGame)
 
 gameRouter.post('/create-game', gameController.createGamePost)
 gameRouter.post('/game/update-game',gameController.updateGamePost)
+
+gameRouter.post('/game/delete', gameController.deleteGame)
 module.exports = gameRouter
 

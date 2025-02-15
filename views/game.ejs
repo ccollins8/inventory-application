@@ -19,6 +19,10 @@
     %>
     <% console.log(game) %>
     <header><a href="/">Home</a></header>
+    <form action="/games/game/delete" method="post">
+        <input type="hidden" name="gameId" value="<%= game[0].id %>">
+        <button type="submit">Delete Game</button>
+    </form>
     <h2>Update Game</h2>
     <form action="/games/game/update-game" method="POST">
         <label for="name">Game name:</label>

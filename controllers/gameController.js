@@ -45,13 +45,20 @@ async function updateGamePost(req, res) {
 
     await db.updateGame(data)
 
+}
 
+async function deleteGame(req,res) {
+    console.log(req.body.gameId)
 
+    await db.deleteGame(req.body.gameId)
+
+    res.redirect('/games')
 }
 
 module.exports = {
     getGames,
     getGame,
     createGamePost,
-    updateGamePost
+    updateGamePost,
+    deleteGame
 }
